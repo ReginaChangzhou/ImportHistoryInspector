@@ -42,7 +42,7 @@ var help_panel_extension = (function() {
                 else{}
 
                 code0 = cell0.get_text().split("\n")
-                console.log(Jupyter.notebook.get_cell(0))
+                
                 var row = code0.length
                 for (i = 0; i < row; i++){//check each line of code
                     code0 = cell0.get_text().split("\n")[i]
@@ -67,9 +67,12 @@ var help_panel_extension = (function() {
             var btn = '<button id = "buttonClean">Clean imports and move to top</button>';
             $('#helpPanel').append(btn+"<br/>");
             $( "#buttonClean" ).click(function() {
-              var newCell = Jupyter.notebook.insert_cell_above(0);
+                Jupyter.notebook.get_selected_cell().unselect()//unselect the current selected cell 
+                cell0 = Jupyter.notebook.get_cell(0);//get the top cell
+                cell0.select()//select the top cell
+              var newCell = Jupyter.notebook.insert_cell_above(0);//insert a cell above the top cell
               var his = history.join("\n")//make text in rows 
-              newCell.set_text(his.toString())
+              newCell.set_text(his.toString())//show imports on the top
 
             ind = 1
             cell0 = Jupyter.notebook.get_cell(ind)
@@ -98,7 +101,8 @@ var help_panel_extension = (function() {
                 var cnt = content.join("\n")//made text in rows
                 cell0.set_text(cnt.toString())//show the removed text
             }
-
+            $("#notebook_panel").css({"width": "100%"});
+            $('#helpPanel').remove();
 
             });
             
@@ -116,7 +120,7 @@ var help_panel_extension = (function() {
                 id : 'help_panel',
                 label : 'Show import list',
                 icon : 'icon-book',
-                //button_text : 'import list',
+                button_text : 'import list',
                 callback : toggleHelpPanel
             }
       ]);
